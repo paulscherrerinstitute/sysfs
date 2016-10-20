@@ -1,42 +1,42 @@
 #define _GNU_SOURCE
-#include <limits.h>
 #include <glob.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #include "sysfsAccess.h"
 
-int sysfsOpenFmt(const char* patternformat, ...)
+int sysfsOpenFmt(const char* pathformat, ...)
 {
     int fd;
     va_list ap;
     
-    va_start(ap, patternformat);
-    fd = sysfsOpenVar(patternformat, ap);
+    va_start(ap, pathformat);
+    fd = sysfsOpenVar(pathformat, ap);
     va_end(ap);
     return fd;
 }
 
-int sysfsOpenVar(const char* patternformat, va_list ap)
+int sysfsOpenVar(const char* pathformat, va_list ap)
 {
-    char *pattern;
+    char *path;
     int fd;
     
-    vasprintf(&pattern, patternformat, ap);
-    fd = sysfsOpen(pattern);
-    free(pattern);
+    vasprintf(&path, pathformat, ap);
+    fd = sysfsOpen(path);
+    free(path);
     return fd;
 }
 
-int sysfsOpen(const char* pattern)
+int sysfsOpen(const char* path)
 {
     glob_t globresults;
     int fd;
 
-    if (glob(pattern, GLOB_BRACE|GLOB_TILDE, NULL, &globresults) != 0)
+    if (glob(path, GLOB_BRACE|GLOB_TILDE, NULL, &globresults) != 0)
     {
         /*errno = ENOENT;*/
         return -1;
