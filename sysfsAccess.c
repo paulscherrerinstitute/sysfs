@@ -36,11 +36,15 @@ int sysfsOpen(const char* path)
     glob_t globresults;
     int fd;
 
-    if (glob(path, GLOB_BRACE|GLOB_TILDE, NULL, &globresults) != 0)
+    int status = glob(path, GLOB_BRACE|GLOB_TILDE, NULL, &globresults);
+     
+    if (status == GLOB_NOMATCH)
     {
-        /*errno = ENOENT;*/
+        errno = ENOENT;
         return -1;
     }
+    if (status != 0)
+        return -1;
     fd = open(globresults.gl_pathv[0], O_RDWR);
     if (fd < 0)
         fd = open(globresults.gl_pathv[0], O_RDONLY);
