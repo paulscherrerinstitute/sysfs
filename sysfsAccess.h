@@ -1,6 +1,8 @@
 #ifndef sysfsAccess_h
 #define sysfsAccess_h
 
+#include <stdarg.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
