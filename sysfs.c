@@ -1,42 +1,22 @@
-#define _GNU_SOURCE
 #include <glob.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <stdarg.h>
 
-#include "sysfsAccess.h"
+#include "sysfs.h"
 
-int sysfsOpenFmt(const char* pathformat, ...)
-{
-    int fd;
-    va_list ap;
-    
-    va_start(ap, pathformat);
-    fd = sysfsOpenVar(pathformat, ap);
-    va_end(ap);
-    return fd;
-}
-
-int sysfsOpenVar(const char* pathformat, va_list ap)
-{
-    char *path;
-    int fd;
-    
-    vasprintf(&path, pathformat, ap);
-    fd = sysfsOpen(path);
-    free(path);
-    return fd;
-}
+#ifndef GLOB_BRACE
+#define GLOB_BRACE 0
+#endif
 
 int sysfsOpen(const char* path)
 {
     glob_t globresults;
     int fd;
 
-    int status = glob(path, GLOB_BRACE|GLOB_TILDE, NULL, &globresults);
+    int status = glob(path, GLOB_BRACE, NULL, &globresults);
      
     if (status == GLOB_NOMATCH)
     {
