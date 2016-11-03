@@ -9,7 +9,6 @@ extern "C" {
 
 int sysfsOpen(const char*  path);
 int sysfsReadStr(int fd, char* buffer, int buffersize);
-int sysfsReadLink(int fd, char* buffer, int buffersize);
 unsigned long sysfsReadULong(int fd);
 long sysfsReadLong(int fd);
 int sysfsWrite(int fd, const char* fmt, long value);
